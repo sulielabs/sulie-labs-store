@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>إتمام الطلب — Sulie Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="page-bg">
+
+<div class="build-plate"></div>
+
+<header>
+  <div class="nav-inner">
+    <a class="brand" href="index.html" style="text-decoration:none">
+      <img class="brand-icon" src="images/icon.png" alt="Sulie Labs">
+      <div class="brand-text">
+        <span class="brand-name">Sulie Labs</span>
+        <span class="brand-slogan">PRINTING YOUR IMAGINATION</span>
+      </div>
+    </a>
+    <nav class="links">
+      <a href="index.html#shop">المتجر</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section" style="padding-top:40px;">
+  <div class="wrap">
+    <a class="back-link" id="backLink" href="index.html#shop">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      رجوع للمنتج
+    </a>
+
+    <h1 class="section-title" style="margin-bottom:28px;">إتمام الطلب</h1>
+
+    <div id="canceledNotice" class="form-notice" style="display:none; max-width:760px;">
+      تم إلغاء عملية الدفع السابقة، لا مشكلة — تقدر تحاول مرة ثانية.
+    </div>
+
+    <div class="checkout-layout">
+
+      <div class="form-card">
+        <div id="formError" class="form-error"></div>
+
+        <div class="form-section-title">بيانات التواصل</div>
+        <div class="form-row">
+          <div class="field">
+            <label>الاسم الكامل</label>
+            <input type="text" id="name" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label>البريد الإلكتروني</label>
+            <input type="email" id="email" autocomplete="email" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>رقم الجوال</label>
+            <input type="tel" id="mobile" placeholder="05XXXXXXXX" autocomplete="tel" required>
+          </div>
+          <div class="field" id="cityField">
+            <label>المدينة</label>
+            <select id="city" required>
+              <option value="" disabled selected>اختاري المدينة</option>
+              <option value="الرياض">الرياض</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <div class="form-section-title">طريقة الاستلام</div>
+        <div class="delivery-toggle">
+          <label class="dt-option">
+            <input type="radio" name="deliveryMethod" value="pickup" checked>
+            <span class="dt-card">
+              <span class="dt-icon">🏬</span>
+              <span class="dt-title">استلام من المتجر</span>
+              <span class="dt-sub">مجاناً</span>
+            </span>
+          </label>
+          <label class="dt-option">
+            <input type="radio" name="deliveryMethod" value="delivery">
+            <span class="dt-card">
+              <span class="dt-icon">🚚</span>
+              <span class="dt-title">توصيل</span>
+              <span class="dt-sub">+١٥ ر.س</span>
+            </span>
+          </label>
+        </div>
+
+        <div id="pickupInfo" class="pickup-info">
+          📍 موقع الاستلام: <strong>حي الملك فهد، الرياض</strong><br>
+          <small>بنرسل لك تفاصيل الاستلام على واتساب بعد إتمام الطلب.</small>
+        </div>
+
+        <div id="addressSection" style="display:none;">
+        <div class="form-section-title">العنوان الوطني</div>
+        <div class="form-row">
+          <div class="field">
+            <label>الحي</label>
+            <input type="text" id="district" required>
+          </div>
+          <div class="field">
+            <label>رقم المبنى</label>
+            <input type="text" id="buildingNo" inputmode="numeric" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field optional">
+            <label>الرمز البريدي</label>
+            <input type="text" id="postalCode" inputmode="numeric">
+          </div>
+          <div class="field optional">
+            <label>الرقم الإضافي</label>
+            <input type="text" id="additionalNo" inputmode="numeric">
+          </div>
+        </div>
+        </div><!-- /addressSection -->
+
+        <button class="btn btn-primary submit-btn" id="payBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg>
+          الدفع الآن
+        </button>
+      </div>
+
+      <div class="order-summary" id="orderSummary">
+        <p>جاري التحميل...</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script src="cart.js"></script>
+<script>
+  function toArabicDigits(n){
+    const map = ["٠","١","٢","٣","٤","٥","٦","٧","٨","٩"];
+    return String(n).split("").map(ch => /[0-9]/.test(ch) ? map[ch] : ch).join("");
+  }
+
+  let orderItems = [];   // [{id,name,price,image,qty}]
+
+  async function loadOrderSummary(){
+    const params = new URLSearchParams(location.search);
+    const directId = params.get("id");
+    document.getElementById("backLink").href = directId ? `product.html?id=${directId}` : "index.html#shop";
+
+    if (params.get("canceled") === "1"){
+      document.getElementById("canceledNotice").style.display = "block";
+    }
+
+    const summary = document.getElementById("orderSummary");
+    try {
+      const res = await fetch("data/products.json", { cache: "no-store" });
+      const data = await res.json();
+      const catalog = data.items || [];
+
+      // Prefer the cart; fall back to a direct ?id= link (adds it to cart view)
+      let cart = window.SulieCart.get();
+      if (cart.length === 0 && directId){
+        const product = catalog.find(p => p.id === directId);
+        if (product){
+          cart = [{ id: product.id, name: product.name, price: product.price, image: (product.images||[])[0] || "", qty: 1 }];
+          window.SulieCart.set(cart);
+        }
+      }
+
+      if (cart.length === 0){
+        summary.innerHTML = `<p>سلتك فاضية. <a href="index.html#shop">رجوع للمتجر</a></p>`;
+        document.getElementById("payBtn").disabled = true;
+        return;
+      }
+
+      orderItems = cart;
+      renderSummary();
+    } catch (err){
+      summary.innerHTML = `<p style="color:#E5512F">تعذر تحميل بيانات المنتج.</p>`;
+      console.error(err);
+    }
+  }
+
+  function currentMethod(){
+    const el = document.querySelector('input[name="deliveryMethod"]:checked');
+    return el ? el.value : "pickup";
+  }
+  const DELIVERY_FEE = 15;
+
+  document.getElementById("cityField").style.display = "none"; // pickup is default
+  document.querySelectorAll('input[name="deliveryMethod"]').forEach(r => {
+    r.addEventListener("change", () => {
+      const isDelivery = currentMethod() === "delivery";
+      document.getElementById("addressSection").style.display = isDelivery ? "" : "none";
+      document.getElementById("cityField").style.display = isDelivery ? "" : "none";
+      document.getElementById("pickupInfo").style.display = isDelivery ? "none" : "";
+      if (orderItems.length) renderSummary();
+    });
+  });
+
+  function renderSummary(){
+    const summary = document.getElementById("orderSummary");
+    const itemsTotal = orderItems.reduce((s,i)=>s+i.price*i.qty,0);
+    const fee = currentMethod() === "delivery" ? DELIVERY_FEE : 0;
+    const total = itemsTotal + fee;
+
+    summary.innerHTML = orderItems.map(i => `
+      <div class="order-summary-item" data-id="${i.id}">
+        <img src="${i.image}" alt="${i.name}" onerror="this.style.visibility='hidden'">
+        <div class="order-summary-name">${i.name}<br><small style="color:#98a0b3">${toArabicDigits(i.price)} ر.س × ${toArabicDigits(i.qty)}</small></div>
+        <div class="cs-qty">
+          <button type="button" data-act="dec">−</button>
+          <button type="button" data-act="inc">+</button>
+        </div>
+      </div>
+    `).join("") + `
+      ${fee ? `<div class="order-summary-row"><span>رسوم التوصيل</span><span>${toArabicDigits(fee)} ر.س</span></div>` : ""}
+      <div class="order-summary-row total"><span>الإجمالي</span><span>${toArabicDigits(total)} ر.س</span></div>
+    `;
+
+    summary.querySelectorAll(".cs-qty button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.closest(".order-summary-item").dataset.id;
+        const it = orderItems.find(x => x.id === id);
+        if (!it) return;
+        it.qty += (btn.dataset.act === "inc" ? 1 : -1);
+        if (it.qty <= 0) orderItems = orderItems.filter(x => x.id !== id);
+        it.qty = Math.min(99, it.qty);
+        window.SulieCart.set(orderItems);
+        if (orderItems.length === 0){
+          document.getElementById("payBtn").disabled = true;
+          document.getElementById("orderSummary").innerHTML = `<p>سلتك فاضية. <a href="index.html#shop">رجوع للمتجر</a></p>`;
+          return;
+        }
+        renderSummary();
+      });
+    });
+  }
+
+  function showError(msg){
+    const el = document.getElementById("formError");
+    el.textContent = msg;
+    el.classList.add("show");
+  }
+  function clearError(){
+    const el = document.getElementById("formError");
+    el.classList.remove("show");
+    el.textContent = "";
+  }
+
+  document.getElementById("payBtn").addEventListener("click", async () => {
+    clearError();
+
+    if (!orderItems.length){
+      showError("سلتك فاضية — أضيفي منتجات أول.");
+      return;
+    }
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const mobile = document.getElementById("mobile").value.trim();
+    const city = document.getElementById("city").value.trim();
+    const district = document.getElementById("district").value.trim();
+    const buildingNo = document.getElementById("buildingNo").value.trim();
+    const postalCode = document.getElementById("postalCode").value.trim();
+    const additionalNo = document.getElementById("additionalNo").value.trim();
+
+    const isDelivery = currentMethod() === "delivery";
+    if (!name || !email || !mobile || (isDelivery && (!city || !district || !buildingNo))){
+      showError("عبّي كل الحقول المطلوبة (غير الاختيارية) قبل ما تكمل.");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      showError("تأكد إن البريد الإلكتروني صحيح.");
+      return;
+    }
+    if (!/^0?5[0-9]{8}$/.test(mobile.replace(/\s/g, ""))){
+      showError("تأكد إن رقم الجوال صحيح (مثال: 05XXXXXXXX).");
+      return;
+    }
+
+    const btn = document.getElementById("payBtn");
+    btn.disabled = true;
+    btn.textContent = "جاري التحويل لبوابة الدفع...";
+
+    try {
+      const res = await fetch("/api/create-invoice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: orderItems.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
+          deliveryMethod: currentMethod(),
+          customer: { name, email, mobile, city, district, buildingNo, postalCode, additionalNo }
+        })
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.paymentUrl){
+        showError(data.error || "تعذر إنشاء الفاتورة، حاول مرة ثانية بعد قليل.");
+        btn.disabled = false;
+        btn.textContent = "الدفع الآن";
+        return;
+      }
+
+      localStorage.removeItem("sulie_cart"); // clear cart — payment started
+      window.location.href = data.paymentUrl;
+    } catch (err){
+      showError("حدث خطأ غير متوقع، تأكد من الاتصال بالإنترنت وحاول مرة ثانية.");
+      btn.disabled = false;
+      btn.textContent = "الدفع الآن";
+      console.error(err);
+    }
+  });
+
+  loadOrderSummary();
+</script>
+
+</body>
+</html>

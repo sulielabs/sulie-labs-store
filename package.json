@@ -1,0 +1,16 @@
+{
+  "name": "sulie-labs-store",
+  "version": "1.0.0",
+  "description": "Sulie Labs - 3D Products Store",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

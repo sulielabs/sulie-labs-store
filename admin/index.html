@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم Sulie Labs</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif;}
+  body{background:#EEF1F8;color:#14213D;padding:20px;line-height:1.7;}
+  .wrap{max-width:860px;margin:0 auto;}
+  header{background:#14213D;color:#fff;padding:26px;border-radius:16px;margin-bottom:18px;text-align:center;}
+  header h1{font-size:26px;margin-bottom:4px;}
+  header p{opacity:.85;font-size:14px;}
+  .nav{display:flex;gap:10px;justify-content:center;margin-bottom:18px;flex-wrap:wrap;}
+  .nav a{background:#fff;color:#14213D;text-decoration:none;font-weight:600;padding:10px 18px;border-radius:10px;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+  .nav a:hover{background:#14213D;color:#fff;}
+  .steps{background:#fff;border-radius:14px;padding:18px 22px;margin-bottom:18px;border-right:4px solid #E5512F;}
+  .steps h2{font-size:16px;margin-bottom:8px;}
+  .steps ol{margin-right:18px;font-size:14px;color:#444;}
+  .steps li{margin-bottom:4px;}
+  .card{background:#fff;border-radius:14px;padding:22px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+  .card h3{font-size:18px;margin-bottom:16px;color:#14213D;border-bottom:2px solid #EEF1F8;padding-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+  .del{background:#e74c3c;color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;}
+  .del:hover{background:#c0392b;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-weight:600;margin-bottom:5px;font-size:14px;}
+  .field input,.field textarea{width:100%;padding:10px;border:1px solid #d5d9e3;border-radius:8px;font-size:14px;font-family:inherit;}
+  .field input:focus,.field textarea:focus{outline:none;border-color:#E5512F;box-shadow:0 0 0 3px rgba(229,81,47,.12);}
+  .field textarea{resize:vertical;min-height:70px;}
+  .hint{font-size:12px;color:#888;margin-top:3px;}
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+  .thumbs img{width:54px;height:54px;object-fit:contain;background:#f4f6fb;border:1px solid #e0e4ee;border-radius:8px;padding:3px;}
+  .addbtn{background:#14213D;color:#fff;border:none;padding:12px 20px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-bottom:16px;}
+  .addbtn:hover{background:#243356;}
+  .save-bar{position:sticky;bottom:12px;background:#fff;border-radius:14px;padding:18px;box-shadow:0 -2px 16px rgba(0,0,0,.1);text-align:center;margin-top:8px;}
+  .btn{background:#E5512F;color:#fff;border:none;padding:14px 34px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;}
+  .btn:hover{background:#c8431f;}
+  .msg{background:#d4edda;color:#155724;padding:14px;border-radius:10px;margin-bottom:16px;display:none;font-size:14px;text-align:center;font-weight:600;}
+  .msg.show{display:block;}
+  .loading{text-align:center;padding:40px;color:#888;}
+  .count{background:#E5512F;color:#fff;font-size:13px;padding:4px 12px;border-radius:20px;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🛠️ لوحة تحكم Sulie Labs</h1>
+    <p>إدارة وتعديل المنتجات</p>
+  </header>
+
+  <div class="nav">
+    <a href="../index.html">🏠 المتجر</a>
+    <a href="orders.html">📋 الطلبات</a>
+  </div>
+
+  <div class="card" id="statsBar" style="display:flex;gap:20px;justify-content:center;text-align:center;">
+    <div><div style="font-size:30px;font-weight:800;color:#E5512F;" id="statVisits">…</div><div style="font-size:13px;color:#98a0b3;">زيارة للموقع</div></div>
+    <div style="border-right:1px solid #eee;"></div>
+    <div><div style="font-size:30px;font-weight:800;color:#14213D;" id="statProducts">…</div><div style="font-size:13px;color:#98a0b3;">منتج</div></div>
+  </div>
+
+  <div class="steps">
+    <h2>📌 طريقة الحفظ</h2>
+    <ol>
+      <li>عدّلي السعر أو الوصف أو الصور، أو أضيفي/احذفي منتج.</li>
+      <li>اضغطي <strong>«حفظ وتنزيل الملف»</strong> بالأسفل.</li>
+      <li>بينزل ملف <strong>products.json</strong> — ارفعيه في GitHub داخل مجلد <strong>data/</strong> (استبدلي القديم).</li>
+      <li>انتظري دقيقة وبتظهر التعديلات في المتجر. ✅</li>
+    </ol>
+  </div>
+
+  <div class="msg" id="msg">✅ تم تنزيل products.json — ارفعيه في GitHub داخل مجلد data/ لتظهر التعديلات</div>
+
+  <button class="addbtn" onclick="addProduct()">➕ إضافة منتج جديد</button>
+
+  <div id="productsArea">
+    <div class="loading">جاري تحميل المنتجات...</div>
+  </div>
+
+  <div class="save-bar">
+    <button class="btn" onclick="saveAll()">💾 حفظ وتنزيل الملف</button>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  let products = [];
+
+  async function loadProducts(){
+    try{
+      const res = await fetch('/data/products.json', {cache:'no-store'});
+      const data = await res.json();
+      products = (data.items || []).map(p => ({
+        id: p.id || '',
+        name: p.name || '',
+        price: p.price ?? 0,
+        description: p.description || '',
+        images: Array.isArray(p.images) ? p.images : []
+      }));
+      render();
+    }catch(err){
+      document.getElementById('productsArea').innerHTML =
+        '<div class="card" style="color:#c0392b">تعذر تحميل المنتجات. تأكدي أن data/products.json موجود في المشروع.</div>';
+      console.error(err);
+    }
+  }
+
+  function render(){
+    const pc = document.getElementById('statProducts');
+    if (pc) pc.textContent = products.length;
+    const area = document.getElementById('productsArea');
+    if(products.length === 0){
+      area.innerHTML = '<div class="card" style="text-align:center;color:#888">لا توجد منتجات. اضغطي «إضافة منتج جديد».</div>';
+      return;
+    }
+    area.innerHTML = products.map((p, i) => `
+      <div class="card">
+        <h3>
+          <span>${escapeHtml(p.name) || 'منتج جديد'}</span>
+          <button class="del" onclick="removeProduct(${i})">🗑️ حذف</button>
+        </h3>
+        <div class="field">
+          <label>المعرّف (إنجليزي بدون مسافات، مثل: banana)</label>
+          <input type="text" value="${escapeHtml(p.id)}" oninput="upd(${i},'id',this.value)">
+        </div>
+        <div class="field">
+          <label>اسم المنتج</label>
+          <input type="text" value="${escapeHtml(p.name)}" oninput="upd(${i},'name',this.value)">
+        </div>
+        <div class="field">
+          <label>السعر (ر.س)</label>
+          <input type="number" step="0.01" value="${p.price}" oninput="upd(${i},'price',this.value)">
+        </div>
+        <div class="field">
+          <label>الوصف</label>
+          <textarea oninput="upd(${i},'description',this.value)">${escapeHtml(p.description)}</textarea>
+        </div>
+        <div class="field">
+          <label>روابط الصور</label>
+          <input type="text" value="${escapeHtml(p.images.join(', '))}" oninput="updImages(${i},this.value)">
+          <div class="hint">افصلي بفاصلة. مثال: images/banana-1.jpg, images/banana-2.jpg</div>
+          <div class="thumbs">${p.images.map(src => `<img src="/${escapeHtml(src)}" onerror="this.style.display='none'">`).join('')}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function upd(i, field, value){
+    if(field === 'price') products[i][field] = parseFloat(value) || 0;
+    else products[i][field] = value;
+    if(field === 'name'){
+      // live-update the card title
+      render();
+    }
+  }
+
+  function updImages(i, value){
+    products[i].images = value.split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  function addProduct(){
+    products.push({ id:'', name:'', price:12, description:'', images:[] });
+    render();
+    window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'});
+  }
+
+  function removeProduct(i){
+    if(confirm('حذف هذا المنتج؟')){
+      products.splice(i, 1);
+      render();
+    }
+  }
+
+  function saveAll(){
+    // clean up: drop fully-empty products
+    const clean = products.filter(p => p.name.trim() || p.id.trim());
+    const output = JSON.stringify({ items: clean }, null, 2);
+    const blob = new Blob([output], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'products.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    const msg = document.getElementById('msg');
+    msg.classList.add('show');
+    window.scrollTo({top:0, behavior:'smooth'});
+    setTimeout(()=>msg.classList.remove('show'), 9000);
+  }
+
+  function escapeHtml(s){
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  async function loadStats(){
+    try{
+      const res = await fetch('/api/stats', { headers: { 'x-admin-token': window.SulieAuth.token() } });
+      const d = await res.json();
+      if (res.ok) document.getElementById('statVisits').textContent = d.visits;
+      else document.getElementById('statVisits').textContent = '—';
+    }catch(e){ document.getElementById('statVisits').textContent = '—'; }
+  }
+
+  document.addEventListener('admin-authed', () => { loadProducts(); loadStats(); });
+</script>
+</body>
+</html>

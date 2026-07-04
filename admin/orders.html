@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>الطلبات — لوحة تحكم Sulie Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<div id="page-bg">
+
+<div class="build-plate"></div>
+
+<header>
+  <div class="nav-inner">
+    <a class="brand" href="../index.html" style="text-decoration:none">
+      <img class="brand-icon" src="../images/icon.png" alt="Sulie Labs">
+      <div class="brand-text">
+        <span class="brand-name">Sulie Labs</span>
+        <span class="brand-slogan">PRINTING YOUR IMAGINATION</span>
+      </div>
+    </a>
+    <nav class="links">
+      <a href="./">لوحة المنتجات</a>
+    </nav>
+    <a class="nav-cta" id="logoutBtn" href="#" style="display:none">تسجيل خروج</a>
+  </div>
+</header>
+
+<section class="section" style="padding-top:40px;">
+  <div class="wrap">
+
+    <div id="loginGate" class="login-gate">
+      <div class="status-icon pending" style="margin:0 auto 18px;">🔒</div>
+      <div class="status-title" style="margin-bottom:10px;">سجّل دخولك لعرض الطلبات</div>
+      <p style="color:rgba(20,33,61,0.7); margin-bottom:20px;">نفس حساب لوحة تحكم المنتجات</p>
+      <button class="btn btn-primary" id="loginBtn">تسجيل الدخول</button>
+    </div>
+
+    <div id="ordersArea" style="display:none;">
+      <div class="section-head">
+        <span class="section-eyebrow">لوحة التحكم</span>
+        <h1 class="section-title">الطلبات</h1>
+        <p class="section-desc">كل الطلبات المدفوعة، الأحدث أولاً.</p>
+      </div>
+
+      <div id="ordersStatus" style="margin-bottom:16px;"></div>
+
+      <div class="orders-table-wrap">
+        <table class="orders-table" id="ordersTable">
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>رقم الطلب</th>
+              <th>المنتج</th>
+              <th>المبلغ</th>
+              <th>الاسم</th>
+              <th>الجوال</th>
+              <th>الإيميل</th>
+              <th>المدينة</th>
+              <th>الحي</th>
+              <th>رقم المبنى</th>
+              <th>الرمز البريدي</th>
+              <th>الرقم الإضافي</th>
+            </tr>
+          </thead>
+          <tbody id="ordersBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</div>
+
+<script src="auth.js"></script>
+<script>
+  function escapeHtml(s){
+    return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  }
+
+  // No login needed on Railway — show the orders area directly.
+  document.getElementById("loginGate").style.display = "none";
+  document.getElementById("ordersArea").style.display = "block";
+
+  async function loadOrders(){
+    const statusEl = document.getElementById("ordersStatus");
+    const body = document.getElementById("ordersBody");
+    statusEl.textContent = "جاري تحميل الطلبات...";
+    body.innerHTML = "";
+
+    try {
+      const res = await fetch("/api/get-orders", { headers: { "x-admin-token": window.SulieAuth.token() } });
+      const data = await res.json();
+
+      if (!res.ok){
+        statusEl.textContent = data.error || "تعذر تحميل الطلبات.";
+        return;
+      }
+
+      const orders = (data.orders || []).slice().reverse();
+
+      if (!orders.length){
+        statusEl.textContent = "لا توجد طلبات بعد.";
+        return;
+      }
+
+      statusEl.textContent = `${orders.length} طلب`;
+
+      body.innerHTML = orders.map(o => `
+        <tr>
+          <td>${escapeHtml(o.date ? new Date(o.date).toLocaleString("ar-SA") : "")}</td>
+          <td>${escapeHtml(o.orderNumber)}</td>
+          <td>${escapeHtml(o.product)}</td>
+          <td>${escapeHtml(o.amount)} ر.س</td>
+          <td>${escapeHtml(o.customerName)}</td>
+          <td>${escapeHtml(o.mobile)}</td>
+          <td>${escapeHtml(o.email)}</td>
+          <td>${escapeHtml(o.city)}</td>
+          <td>${escapeHtml(o.district)}</td>
+          <td>${escapeHtml(o.buildingNo)}</td>
+          <td>${escapeHtml(o.postalCode)}</td>
+          <td>${escapeHtml(o.additionalNo)}</td>
+        </tr>
+      `).join("");
+    } catch (err){
+      statusEl.textContent = "حدث خطأ غير متوقع.";
+      console.error(err);
+    }
+  }
+
+  document.addEventListener("admin-authed", loadOrders);
+</script>
+
+</body>
+</html>

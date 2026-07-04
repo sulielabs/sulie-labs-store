@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "id": "banana",
+      "name": "بندي بنانا",
+      "price": 12,
+      "description": "موزة مرنة تتمدد وتلتوي بين أصابعك — أغرب فيدجت تجربه.",
+      "images": ["images/banana-1.jpg", "images/banana-2.jpg"]
+    },
+    {
+      "id": "octoflex",
+      "name": "أوكتوفليكس",
+      "price": 12,
+      "description": "أخطبوط بثمانية أرجل متحركة، كل رجل تلتف وتتمفصل لحالها.",
+      "images": ["images/octo-1.jpg", "images/octo-2.jpg"]
+    },
+    {
+      "id": "floofy-hemti",
+      "name": "فلووي همتي",
+      "price": 12,
+      "description": "بيضة هادية تتفتح لشكل غريب يتلوى بين يدينك.",
+      "images": ["images/egg-1.jpg", "images/egg-2.jpg", "images/egg-3.jpg"]
+    },
+    {
+      "id": "stretchy-net",
+      "name": "ستريتشي نت",
+      "price": 12,
+      "description": "شبكة مرنة تتمدد متر كامل... وترجع لشكلها زي ما هي.",
+      "images": ["images/net-1.jpg", "images/net-2.jpg"]
+    }
+  ]
+}
