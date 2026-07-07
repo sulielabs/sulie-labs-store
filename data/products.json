@@ -6,7 +6,7 @@
       "price": 12,
       "description": "موزة مرنة تتمدد وتلتوي بين أصابعك — أغرب فيدجت تجربه.",
       "images": [
-        "images/banana-1.jpg",
+        "images/banana-1.jpeg",
         "images/banana-2.jpg"
       ],
       "category": "ألعاب"
@@ -17,7 +17,7 @@
       "price": 12,
       "description": "أخطبوط بثمانية أرجل متحركة، كل رجل تلتف وتتمفصل لحالها.",
       "images": [
-        "images/octo-1.jpg",
+        "images/octo-1.jpeg",
         "images/octo-2.jpg"
       ],
       "category": "ألعاب"
