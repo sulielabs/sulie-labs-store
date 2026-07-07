@@ -949,3 +949,16 @@
   0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.45);}
   50%{box-shadow:0 0 0 10px rgba(37,211,102,0);}
 }
+
+/* ===== category filter buttons ===== */
+.cat-filters{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 26px;}
+.cat-btn{
+  background:#fff;border:2px solid #d5d9e3;color:#14213D;
+  padding:9px 22px;border-radius:30px;font-size:14px;font-weight:700;cursor:pointer;
+  transition:border-color .2s, background .2s, color .2s, transform .15s cubic-bezier(.34,1.56,.64,1);
+  font-family:inherit;
+}
+.cat-btn:hover{border-color:#E5512F;transform:translateY(-2px);}
+.cat-btn:active{transform:scale(.95);}
+.cat-btn.active{background:#E5512F;border-color:#E5512F;color:#fff;}
+#productGrid{transition:opacity .18s ease;}

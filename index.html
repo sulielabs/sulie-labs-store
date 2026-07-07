@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light only">
-<title>Sulie Labs — متجر فيدجتس مطبوعة 3D</title>
+<title>Sulie Labs — ألعاب ومجسمات وإكسسوارات مطبوعة 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -42,14 +42,13 @@
     <div class="eyebrow"><span class="dot"></span> SULIE LABS — PRINTING YOUR IMAGINATION</div>
 
     <h1 class="hero-headline">
-      <span class="line"><span>تتمدد، تلتوي،</span></span>
-      <span class="line"><span>تطلع من الطابعة</span></span>
-      <span class="line"><span>وتعيش في <span class="accent">جيبك.</span></span></span>
+      <span class="line"><span>نطبع خيالك…</span></span>
+      <span class="line"><span>قطعة وراء <span class="accent">قطعة.</span></span></span>
     </h1>
 
     <div class="nozzle-rule"></div>
 
-    <p class="hero-sub">أربع فيدجتس مطبوعة بطابعة 3D، كل واحدة فيها حركة غريبة لازم تجربها بإيدك. تطلب، نطبع، توصلك.</p>
+    <p class="hero-sub">من الفكرة إلى القطعة النهائية بكامل تفاصيلها.</p>
 
     <div class="hero-ctas">
       <a href="#shop" class="btn btn-primary">
@@ -75,6 +74,10 @@
       <p class="section-desc">دوس على أي صورة تشوفها تتحرك. لما تختار، دوس عليها لتشوف التفاصيل وتطلبها.</p>
     </div>
 
+    <div class="cat-filters" id="catFilters">
+      <button class="cat-btn active" data-cat="all">الكل</button>
+    </div>
+
     <div class="grid" id="productGrid">
       <!-- products are rendered here automatically from data/products.json -->
     </div>
@@ -93,7 +96,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
         </div>
         <h3>نصمم الشكل</h3>
-        <p>نختار أو نصمم كل قطعة بعناية عشان تتحرك وتتمدد بالشكل الصحيح.</p>
+        <p>نختار أو نصمم كل قطعة بعناية — من الطباعة إلى التشطيب النهائي.</p>
       </div>
       <div class="step">
         <div class="step-icon">
@@ -227,27 +230,60 @@
     });
   }
 
+  function buildCategoryFilters(items){
+    const bar = document.getElementById("catFilters");
+    const cats = [...new Set(items.map(p => p.category).filter(Boolean))];
+    if (cats.length === 0){ bar.style.display = "none"; return; }
+    bar.innerHTML = `<button class="cat-btn active" data-cat="all">الكل</button>` +
+      cats.map(c => `<button class="cat-btn" data-cat="${c}">${c}</button>`).join("");
+    bar.querySelectorAll(".cat-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        bar.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        filterProducts(btn.dataset.cat);
+      });
+    });
+  }
+
+  function filterProducts(cat){
+    const grid = document.getElementById("productGrid");
+    const items = (window.__allProducts || []).filter(p => cat === "all" || p.category === cat);
+    grid.style.opacity = "0";
+    setTimeout(() => {
+      grid.innerHTML = items.length
+        ? items.map(renderCard).join("")
+        : `<p style="grid-column:1/-1;text-align:center;color:#98a0b3;padding:30px;">لا توجد منتجات في هذا التصنيف بعد.</p>`;
+      attachCardBehavior();
+      attachCartButtons(grid);
+      grid.style.opacity = "1";
+    }, 180);
+  }
+
+  function attachCartButtons(grid){
+    grid.querySelectorAll(".add-cart-btn").forEach(btn => {
+      btn.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        window.SulieCart.add({
+          id: btn.dataset.id, name: btn.dataset.name,
+          price: parseFloat(btn.dataset.price), image: btn.dataset.image, qty: 1
+        });
+        window.SulieCart.fly(btn);
+        btn.classList.add("added");
+        setTimeout(()=>btn.classList.remove("added"), 400);
+      });
+    });
+  }
+
   async function loadProducts(){
     const grid = document.getElementById("productGrid");
     try {
       const res = await fetch("data/products.json", { cache: "no-store" });
       const data = await res.json();
       const items = data.items || [];
+      window.__allProducts = items;
+      buildCategoryFilters(items);
       grid.innerHTML = items.map(renderCard).join("");
-
-      // add-to-cart buttons
-      grid.querySelectorAll(".add-cart-btn").forEach(btn => {
-        btn.addEventListener("click", (ev) => {
-          ev.preventDefault();
-          window.SulieCart.add({
-            id: btn.dataset.id, name: btn.dataset.name,
-            price: parseFloat(btn.dataset.price), image: btn.dataset.image, qty: 1
-          });
-          window.SulieCart.fly(btn);
-          btn.classList.add("added");
-          setTimeout(()=>btn.classList.remove("added"), 400);
-        });
-      });
+      attachCartButtons(grid);
       const eyebrow = document.getElementById("shopEyebrow");
       if (eyebrow) eyebrow.textContent = `المتجر — ${toArabicDigits(items.length)} قطع`;
       attachCardBehavior();
