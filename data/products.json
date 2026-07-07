@@ -6,9 +6,10 @@
       "price": 12,
       "description": "موزة مرنة تتمدد وتلتوي بين أصابعك — أغرب فيدجت تجربه.",
       "images": [
-        "images/banana-1.jpeg",
+        "images/banana-1.jpg",
         "images/banana-2.jpg"
-      ]
+      ],
+      "category": "ألعاب"
     },
     {
       "id": "octoflex",
@@ -18,7 +19,8 @@
       "images": [
         "images/octo-1.jpg",
         "images/octo-2.jpg"
-      ]
+      ],
+      "category": "ألعاب"
     },
     {
       "id": "floofy-hemti",
@@ -29,7 +31,8 @@
         "images/egg-1.jpg",
         "images/egg-2.jpg",
         "images/egg-3.jpg"
-      ]
+      ],
+      "category": "ألعاب"
     },
     {
       "id": "stretchy-net",
@@ -39,7 +42,8 @@
       "images": [
         "images/net-1.jpg",
         "images/net-2.jpg"
-      ]
+      ],
+      "category": "ألعاب"
     }
   ]
 }
