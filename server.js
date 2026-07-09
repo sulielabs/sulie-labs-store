@@ -170,7 +170,8 @@ app.post("/api/create-invoice", async (req, res) => {
     }
     return res.json({ paymentUrl: invData.url, transactionNo: invData.transactionNo });
   } catch (err) {
-    return res.status(500).json({ error: "خطأ غير متوقع", details: String(err) });
+    const cause = err && err.cause ? ` | cause: ${String(err.cause)}` : "";
+    return res.status(500).json({ error: "خطأ غير متوقع", details: String(err) + cause });
   }
 });
 
@@ -267,6 +268,39 @@ app.get(["/admin", "/admin/"], (req, res) => {
 });
 
 // Static files (index.html, styles.css, data/, images/, admin/, etc.)
+// GET /api/paylink-test — أداة تشخيص مؤقتة (لا تكشف أسرار)
+app.get("/api/paylink-test", async (req, res) => {
+  const BASE = process.env.PAYLINK_BASE_URL || "https://restpilot.paylink.sa";
+  const report = {
+    baseUrl_asConfigured: JSON.stringify(BASE), // JSON.stringify يكشف أي مسافات/رموز خفية
+    baseUrl_length: BASE.length,
+    apiId_set: Boolean(process.env.PAYLINK_API_ID),
+    secretKey_set: Boolean(process.env.PAYLINK_SECRET_KEY),
+  };
+  try {
+    const r = await fetch(`${BASE}/api/auth`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        apiId: process.env.PAYLINK_API_ID,
+        secretKey: process.env.PAYLINK_SECRET_KEY,
+        persistToken: false,
+      }),
+    });
+    const data = await r.json().catch(() => ({}));
+    report.fetch = "SUCCESS — وصلنا لـ Paylink";
+    report.httpStatus = r.status;
+    report.authOk = Boolean(data.id_token);
+    if (!data.id_token) report.paylinkSays = data;
+  } catch (err) {
+    report.fetch = "FAILED — ما قدرنا نوصل لـ Paylink";
+    report.errName = String(err);
+    report.errCause = err && err.cause ? String(err.cause) : "no cause";
+    report.errCode = err && err.cause && err.cause.code ? err.cause.code : "";
+  }
+  res.json(report);
+});
+
 app.use(express.static(__dirname));
 
 // Catch-all: only for genuine page routes — never for data/api/admin/assets
