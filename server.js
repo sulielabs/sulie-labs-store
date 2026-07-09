@@ -192,12 +192,32 @@ app.get("/api/verify-invoice", async (req, res) => {
     });
     const authData = await authRes.json();
     if (!authData.id_token) return res.status(502).json({ error: "تعذر الاتصال ببوابة الدفع" });
-    const getRes = await fetch(`${BASE}/api/getInvoice`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${authData.id_token}` },
-      body: JSON.stringify({ transactionNo }),
-    });
-    const invoice = await getRes.json();
+    // الصيغة الرسمية: GET /api/getInvoice/{transactionNo}
+    let invoice = {};
+    try {
+      const getRes = await fetch(`${BASE}/api/getInvoice/${encodeURIComponent(transactionNo)}`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${authData.id_token}` },
+      });
+      invoice = await getRes.json();
+    } catch (e) { invoice = {}; }
+
+    // fallback: الصيغة القديمة POST مع body
+    if (!invoice || !invoice.orderStatus) {
+      try {
+        const getRes2 = await fetch(`${BASE}/api/getInvoice`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${authData.id_token}` },
+          body: JSON.stringify({ transactionNo }),
+        });
+        const inv2 = await getRes2.json();
+        if (inv2 && inv2.orderStatus) invoice = inv2;
+      } catch (e) {}
+    }
+
+    if (!invoice || !invoice.orderStatus) {
+      console.error("verify-invoice: no orderStatus. Paylink raw:", JSON.stringify(invoice).slice(0, 400));
+    }
     const isPaid = (invoice.orderStatus || "").toLowerCase() === "paid";
     if (isPaid) {
       let meta = {};
