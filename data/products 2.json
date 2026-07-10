@@ -1,0 +1,61 @@
+{
+  "items": [
+    {
+      "id": "banana",
+      "name": "بندي بنانا",
+      "price": 24,
+      "description": "موزة مرنة تتمدد وتلتوي بين أصابعك — أغرب فيدجت تجربه.",
+      "category": "ألعاب",
+      "images": [
+        "images/banana-1.jpeg",
+        "images/banana-2.jpg"
+      ]
+    },
+    {
+      "id": "octoflex",
+      "name": "أوكتوفليكس",
+      "price": 12,
+      "description": "أخطبوط بثمانية أرجل متحركة، كل رجل تلتف وتتمفصل لحالها.",
+      "category": "ألعاب",
+      "images": [
+        "images/octo-1.jpeg",
+        "images/octo-2.jpg"
+      ]
+    },
+    {
+      "id": "floofy-hemti",
+      "name": "فلووي همتي",
+      "price": 32,
+      "description": "بيضة هادية تتفتح لشكل غريب يتلوى بين يدينك.",
+      "category": "ألعاب",
+      "images": [
+        "images/egg-1.jpg",
+        "images/egg-2.jpg",
+        "images/egg-3.jpg"
+      ]
+    },
+    {
+      "id": "stretchy-net",
+      "name": "ستريتشي نت",
+      "price": 29,
+      "description": "شبكة مرنة تتمدد متر كامل... وترجع لشكلها زي ما هي.",
+      "category": "ألعاب",
+      "images": [
+        "images/net-1.jpg",
+        "images/net-2.jpg"
+      ]
+    },
+    {
+      "id": "Galaxy",
+      "name": "جالاكسي",
+      "price": 9,
+      "description": "مجسّم ثلاثي الأبعاد مصمم بطريقة تخليك تبغى تلعب فيه طول الوقت.\nحلقاته المتداخلة تتحرك بسلاسة، وكأنها مجرة صغيرة تدور بين يديك.\nيعطي إحساس هدوء وتركيز، ويخلّي اليدين مشغولة بطريقة ممتعة بدل التوتر.",
+      "category": "ألعاب",
+      "images": [
+        "images/gal-1.jpeg",
+        "images/gal-2.jpeg",
+        "images/gal-3.jpeg"
+      ]
+    }
+  ]
+}
