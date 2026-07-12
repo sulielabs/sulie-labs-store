@@ -56,6 +56,18 @@
         "images/gal-2.JPEG",
         "images/gal-3.JPEG"
       ]
+    },
+    {
+      "id": "Spiral",
+      "name": "سبايرل",
+      "price": 14,
+      "description": "أطلق خيالك مع سبايرل!\nمجسّم ثلاثي الأبعاد بتصميم حلزوني ذكي يخليك تحس إنك تمسك قطعة من عالم الابتكار. ",
+      "category": "ألعاب",
+      "images": [
+        "images/spi-3.png",
+        "images/spi-2.png",
+        "images/spi-1.png"
+      ]
     }
   ]
 }
