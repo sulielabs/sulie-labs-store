@@ -68,6 +68,28 @@
         "images/spi-2.png",
         "images/spi-1.png"
       ]
+    },
+    {
+      "id": "Clickohop",
+      "name": "كليكو هوب",
+      "price": 12,
+      "description": "كليكو هوب لعبة ضغط وقفز ترجع وتنط بحركة سريعة وممتعة. اضغطه… يرجع. اضغطه أكثر… ينط. خفيف، صغير، ويونس بأي وقت.",
+      "category": "ألعاب",
+      "images": [
+        "images/hop-3.jpeg",
+        "images/hop-2.jpeg",
+        "images/hop-1.jpeg"
+      ]
+    },
+    {
+      "id": "Snake",
+      "name": "سنيك",
+      "price": 8,
+      "description": "سنيك ذيل مرن يلتف وينثني بحركة سلسة تخليك تلعب فيه بدون توقّف. خفيف، ممتع، ويعطيك إحساس مرضي بكل حركة.",
+      "category": "ألعاب",
+      "images": [
+        "image/snake.jpeg"
+      ]
     }
   ]
 }
